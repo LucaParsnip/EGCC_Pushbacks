@@ -863,6 +863,7 @@
             }
 
             const querySuffix = query.match(/[lr]$/i)?.[0]?.toLowerCase() || '';
+            const baseQuery = querySuffix ? query.slice(0, -1) : query;
 
             const filtered = standsData.filter(item => {
                 const standCode = item.stand.replace(/^(gate|parking|none)\s+/i, '').toLowerCase();
@@ -877,7 +878,9 @@
                     return standCode === query;
                 }
 
-                return standCode === query && !standSuffix;
+                return standCode === query || (
+                    !standSuffix && standCode.startsWith(baseQuery) && (standCode === baseQuery || standCode === `${baseQuery}l` || standCode === `${baseQuery}r`)
+                );
             });
             
             renderCards(filtered);
