@@ -862,12 +862,22 @@
                 return;
             }
 
+            const querySuffix = query.match(/[lr]$/i)?.[0]?.toLowerCase() || '';
+
             const filtered = standsData.filter(item => {
                 const standCode = item.stand.replace(/^(gate|parking|none)\s+/i, '').toLowerCase();
-                const isExactStandMatch = standCode === query;
+                const standSuffix = standCode.match(/[lr]$/i)?.[0]?.toLowerCase() || '';
                 const isFullTitleMatch = item.stand.toLowerCase() === rawQuery.toLowerCase();
 
-                return isExactStandMatch || isFullTitleMatch;
+                if (isFullTitleMatch) {
+                    return true;
+                }
+
+                if (querySuffix) {
+                    return standCode === query;
+                }
+
+                return standCode === query && !standSuffix;
             });
             
             renderCards(filtered);
