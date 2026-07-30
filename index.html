@@ -854,14 +854,20 @@
         }
 
         function filterData() {
-            const query = searchInput.value.toLowerCase().trim();
+            const rawQuery = searchInput.value.trim();
+            const query = rawQuery.toLowerCase().replace(/^(gate|parking|none)\s+/i, '');
             
+            if (!query) {
+                renderCards(standsData);
+                return;
+            }
+
             const filtered = standsData.filter(item => {
-                const standNumber = item.stand.replace(/^(gate|parking|none)\s+/i, '').toLowerCase();
-                
-                return standNumber.includes(query) ||
-                       item.stand.toLowerCase().includes(query) ||
-                       item.options.some(opt => opt.val.toLowerCase().includes(query));
+                const standCode = item.stand.replace(/^(gate|parking|none)\s+/i, '').toLowerCase();
+                const isExactStandMatch = standCode === query;
+                const isFullTitleMatch = item.stand.toLowerCase() === rawQuery.toLowerCase();
+
+                return isExactStandMatch || isFullTitleMatch;
             });
             
             renderCards(filtered);
