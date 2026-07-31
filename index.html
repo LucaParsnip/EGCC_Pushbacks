@@ -101,6 +101,81 @@
             transform: rotate(20deg) scale(1.08);
         }
 
+        .runway-panel {
+            width: 100%;
+            max-width: 760px;
+            margin: 1rem 0 2rem;
+            padding: 1.15rem 1.2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(15, 23, 42, 0.2));
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(14px);
+        }
+
+        body[data-theme="light"] .runway-panel {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(255, 255, 255, 0.85));
+        }
+
+        .runway-panel__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .runway-panel__eyebrow {
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent-color);
+        }
+
+        .runway-panel__status {
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(56, 189, 248, 0.16);
+            color: var(--accent-color);
+        }
+
+        .runway-panel__body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.9rem;
+        }
+
+        .runway-panel__item {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.8rem 0.9rem;
+        }
+
+        body[data-theme="light"] .runway-panel__item {
+            background: rgba(255, 255, 255, 0.75);
+            border-color: rgba(37, 99, 235, 0.12);
+        }
+
+        .runway-panel__label {
+            display: block;
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .runway-panel__value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
         .search-container {
             width: 100%;
             max-width: 600px;
@@ -271,6 +346,27 @@
         </button>
     </header>
 
+    <div class="runway-panel" id="runwayPanel" aria-live="polite">
+        <div class="runway-panel__top">
+            <span class="runway-panel__eyebrow">Runway operations</span>
+            <span class="runway-panel__status" id="runwayStatus">Checking...</span>
+        </div>
+        <div class="runway-panel__body">
+            <div class="runway-panel__item">
+                <span class="runway-panel__label">Current mode</span>
+                <div class="runway-panel__value" id="runwayMode">Loading...</div>
+            </div>
+            <div class="runway-panel__item">
+                <span class="runway-panel__label">Preferred direction</span>
+                <div class="runway-panel__value" id="runwayDirection">Loading...</div>
+            </div>
+            <div class="runway-panel__item">
+                <span class="runway-panel__label">METAR wind</span>
+                <div class="runway-panel__value" id="runwayWind">Loading...</div>
+            </div>
+        </div>
+    </div>
+
     <div class="search-container">
         <input type="text" id="searchInput" class="search-input" placeholder="Enter Stand Number (e.g., 101, 105, 12R, 203L)...">
     </div>
@@ -286,6 +382,103 @@
 
     <script>
         let standsData = [];
+
+        function isDualRunwayOpen(date = new Date()) {
+            const day = date.getDay();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const month = date.getMonth() + 1;
+            const time = hours * 60 + minutes;
+            const isSummer = month >= 5 && month <= 10;
+
+            if (isSummer) {
+                if (day >= 1 && day <= 5) {
+                    return time >= 375 && time <= 1200;
+                }
+                if (day === 6) {
+                    return time >= 375 && time <= 960;
+                }
+                return time >= 375 && time <= 570 || time >= 780 && time <= 1200;
+            }
+
+            if (day >= 1 && day <= 5) {
+                return time >= 390 && time <= 660 || time >= 960 && time <= 1200;
+            }
+            if (day === 6) {
+                return time >= 390 && time <= 660;
+            }
+            return time >= 960 && time <= 1200;
+        }
+
+        function getPreferredRunwayDirection(windDirection, windSpeed) {
+            if (!windDirection || !windSpeed) {
+                return '23s';
+            }
+
+            const runway05Heading = 50;
+            const runway23Heading = 230;
+            const toRadians = deg => deg * (Math.PI / 180);
+            const headwind05 = Math.abs(windSpeed * Math.cos(toRadians(windDirection - runway05Heading)));
+            const headwind23 = Math.abs(windSpeed * Math.cos(toRadians(windDirection - runway23Heading)));
+
+            return headwind23 >= headwind05 ? '23s' : '05s';
+        }
+
+        function parseMetarWind(rawText) {
+            if (!rawText) {
+                return null;
+            }
+
+            const windMatch = rawText.match(/\b(?:VRB|\d{3})(?:\d{2})(?:G\d{2})?KT\b/i);
+            if (!windMatch) {
+                return null;
+            }
+
+            const token = windMatch[0];
+            if (token.startsWith('VRB')) {
+                return { direction: null, speed: null, text: token };
+            }
+
+            const direction = parseInt(token.slice(0, 3), 10);
+            const speed = parseInt(token.slice(3, 5), 10);
+            return { direction, speed, text: token };
+        }
+
+        async function updateRunwayPanel() {
+            const statusEl = document.getElementById('runwayStatus');
+            const modeEl = document.getElementById('runwayMode');
+            const directionEl = document.getElementById('runwayDirection');
+            const windEl = document.getElementById('runwayWind');
+
+            if (!statusEl || !modeEl || !directionEl || !windEl) {
+                return;
+            }
+
+            const dualOpen = isDualRunwayOpen();
+            const modeText = dualOpen ? 'Dual runway operations' : 'Single runway operations';
+            statusEl.textContent = dualOpen ? 'Active' : 'Single';
+            modeEl.textContent = modeText;
+
+            try {
+                const response = await fetch('https://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=json&stationString=EGCC&hoursBeforeNow=1');
+                if (!response.ok) {
+                    throw new Error(`METAR request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const rawText = data?.results?.[0]?.raw_text || '';
+                const windInfo = parseMetarWind(rawText);
+                const direction = windInfo ? getPreferredRunwayDirection(windInfo.direction, windInfo.speed) : '23s';
+                const windText = windInfo ? `${windInfo.text} (${rawText.split(' ').slice(1, 3).join(' ')})` : 'Unavailable';
+
+                directionEl.textContent = direction.toUpperCase();
+                windEl.textContent = windText;
+            } catch (error) {
+                console.error('Unable to load EGCC METAR:', error);
+                directionEl.textContent = '23s';
+                windEl.textContent = 'METAR unavailable';
+            }
+        }
 
         async function loadStandsData() {
             try {
@@ -415,6 +608,7 @@
 
         // Initial render
         loadStandsData();
+        updateRunwayPanel();
     </script>
 </body>
 </html>
