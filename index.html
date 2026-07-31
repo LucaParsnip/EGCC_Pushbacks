@@ -14,6 +14,19 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --tag-bg: #0369a1;
+            --option-item-bg: rgba(15, 23, 42, 0.5);
+        }
+
+        body[data-theme="light"] {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #dbe3f0;
+            --tag-bg: #dbeafe;
+            --option-item-bg: rgba(226, 232, 240, 0.9);
         }
 
         * {
@@ -31,12 +44,16 @@
             align-items: center;
             min-height: 100vh;
             padding: 2rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         header {
             text-align: center;
             margin-bottom: 2rem;
             max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header h1 {
@@ -50,6 +67,38 @@
         header p {
             color: var(--text-muted);
             font-size: 1rem;
+        }
+
+        .theme-toggle {
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.18), rgba(15, 23, 42, 0.2));
+            color: var(--text-main);
+            padding: 0.7rem 1rem;
+            border-radius: 999px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(12px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        .theme-toggle__icon {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover .theme-toggle__icon {
+            transform: rotate(20deg) scale(1.08);
         }
 
         .search-container {
@@ -162,7 +211,7 @@
         }
 
         .option-item {
-            background-color: rgba(15, 23, 42, 0.5);
+            background-color: var(--option-item-bg);
             border-left: 3px solid var(--accent-color);
             padding: 0.6rem 0.8rem;
             border-radius: 0 6px 6px 0;
@@ -216,6 +265,10 @@
     <header>
         <h1>EGCC - iniBuilds Manchester</h1>
         <p>Stand & Pushback Position Lookup</p>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark and light mode" aria-pressed="true">
+            <span class="theme-toggle__icon">🌙</span>
+            <span class="theme-toggle__label">Dark Mode</span>
+        </button>
     </header>
 
     <div class="search-container">
@@ -253,6 +306,31 @@
         const grid = document.getElementById('standsGrid');
         const searchInput = document.getElementById('searchInput');
         const quickSelect = document.getElementById('quickSelect');
+        const themeToggle = document.getElementById('themeToggle');
+
+        function applyTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            if (themeToggle) {
+                const icon = themeToggle.querySelector('.theme-toggle__icon');
+                const label = themeToggle.querySelector('.theme-toggle__label');
+                if (icon) icon.textContent = theme === 'light' ? '☀️' : '🌙';
+                if (label) label.textContent = theme === 'light' ? 'Light Mode' : 'Dark Mode';
+                themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        applyTheme(savedTheme || preferredTheme);
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const nextTheme = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+                applyTheme(nextTheme);
+            });
+        }
 
         function renderCards(data) {
             grid.innerHTML = '';
