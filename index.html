@@ -208,9 +208,11 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            width: 100%;
             max-width: 900px;
-            margin-bottom: 2rem;
+            margin: 0 auto 2rem;
             justify-content: center;
+            align-items: center;
         }
 
         .quick-btn {
@@ -465,6 +467,158 @@
             overflow: hidden;
         }
 
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .auth-tab {
+            flex: 1;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-main);
+            padding: 0.9rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(15, 23, 42, 0.55));
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .auth-content.hidden,
+        .admin-panel.hidden {
+            display: none;
+        }
+
+        .auth-content {
+            display: block;
+        }
+
+        .request-field {
+            display: grid;
+            gap: 0.35rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .request-field label,
+        .auth-field label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .request-field input,
+        .request-field textarea,
+        .auth-field input {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-main);
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .request-field textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .admin-panel {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+            display: grid;
+            gap: 1rem;
+        }
+
+        .admin-panel__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-panel__title {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .admin-panel__section {
+            display: grid;
+            gap: 1rem;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 1rem;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .admin-panel__section h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .admin-panel__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .admin-panel__button {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 999px;
+            padding: 0.95rem 1.15rem;
+            font-size: 0.95rem;
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 60%, #0284c7 100%);
+            color: #0f172a;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 12px 30px rgba(2, 132, 199, 0.18);
+        }
+
+        .admin-panel__button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 36px rgba(2, 132, 199, 0.24);
+        }
+
+        .admin-request-card {
+            display: grid;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.12);
+        }
+
+        .admin-request-card strong {
+            display: block;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+        }
+
+        .admin-request-card p {
+            line-height: 1.5;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
         #appContent.locked {
             filter: blur(2px) brightness(0.85);
             pointer-events: none;
@@ -476,21 +630,52 @@
     <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog">
         <div class="auth-card" role="document">
             <div class="auth-card__inner">
-                <h1 class="auth-title">Secure Access Required</h1>
-                <p class="auth-subtitle">Enter the credentials to unlock the Manchester pushback lookup. Only authorised users may proceed.</p>
-                <form class="auth-form" id="loginForm">
-                    <div class="auth-field">
-                        <label for="usernameInput">Username</label>
-                        <input id="usernameInput" type="text" autocomplete="username" placeholder="Username" required>
-                    </div>
-                    <div class="auth-field">
-                        <label for="passwordInput">Password</label>
-                        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" required>
-                    </div>
-                    <div class="auth-error" id="authError" aria-live="polite"></div>
-                    <button class="auth-submit" type="submit">Unlock the tower</button>
-                </form>
-                <p class="auth-note">Hint: username is <strong>parsnip</strong> and password is <strong>password</strong>.</p>
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true">Login</button>
+                    <button class="auth-tab" id="requestTab" type="button" role="tab" aria-selected="false">Request Access</button>
+                </div>
+                <div class="auth-content" id="loginPanel">
+                    <h1 class="auth-title">Secure Access Required</h1>
+                    <p class="auth-subtitle">Enter the credentials to unlock the Manchester pushback lookup. Only authorised users may proceed.</p>
+                    <form class="auth-form" id="loginForm">
+                        <div class="auth-field">
+                            <label for="usernameInput">Username</label>
+                            <input id="usernameInput" type="text" autocomplete="username" placeholder="Username" required>
+                        </div>
+                        <div class="auth-field">
+                            <label for="passwordInput">Password</label>
+                            <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" required>
+                        </div>
+                        <div class="auth-error" id="authError" aria-live="polite"></div>
+                        <button class="auth-submit" type="submit">Unlock the tower</button>
+                    </form>
+                    <p class="auth-note">Admin username: <strong>parsnip</strong>. Default admin password: <strong>password</strong>.</p>
+                </div>
+                <div class="auth-content hidden" id="requestPanel">
+                    <h1 class="auth-title">Request Access</h1>
+                    <p class="auth-subtitle">Send a request to the admin to get a username and password.</p>
+                    <form class="auth-form" id="requestForm">
+                        <div class="request-field">
+                            <label for="requestName">Name</label>
+                            <input id="requestName" type="text" placeholder="Your name" required>
+                        </div>
+                        <div class="request-field">
+                            <label for="requestEmail">Email</label>
+                            <input id="requestEmail" type="email" placeholder="Your email" required>
+                        </div>
+                        <div class="request-field">
+                            <label for="requestLocation">Location</label>
+                            <input id="requestLocation" type="text" placeholder="Your city or country" required>
+                        </div>
+                        <div class="request-field">
+                            <label for="requestReason">Why do you need access?</label>
+                            <textarea id="requestReason" placeholder="Tell the admin why you need access" required></textarea>
+                        </div>
+                        <div class="auth-error" id="requestError" aria-live="polite"></div>
+                        <button class="auth-submit" type="submit">Send request</button>
+                    </form>
+                    <p class="auth-note">This will create a request and open your email client to notify the admin.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -504,6 +689,36 @@
             <span class="theme-toggle__label">Dark Mode</span>
         </button>
     </header>
+
+    <section class="admin-panel hidden" id="adminPanel" aria-live="polite">
+        <div class="admin-panel__header">
+            <div>
+                <div class="admin-panel__title">Admin Control Center</div>
+                <p class="auth-note">Visible only to the admin user <strong>parsnip</strong>.</p>
+            </div>
+            <div class="admin-panel__actions">
+                <button class="admin-panel__button" id="generatePasswordButton" type="button">Generate strong password</button>
+            </div>
+        </div>
+        <div class="admin-panel__section">
+            <h3>Create a new user</h3>
+            <div class="request-field">
+                <label for="newUsername">Username</label>
+                <input id="newUsername" type="text" placeholder="New user name">
+            </div>
+            <div class="request-field">
+                <label for="newPassword">Password</label>
+                <input id="newPassword" type="text" placeholder="Generated or custom password">
+            </div>
+            <div class="auth-error" id="adminCreateError" aria-live="polite"></div>
+            <button class="admin-panel__button" id="createUserButton" type="button">Create user</button>
+            <div class="auth-note" id="adminCreateSuccess"></div>
+        </div>
+        <div class="admin-panel__section">
+            <h3>Pending access requests</h3>
+            <div id="requestList"></div>
+        </div>
+    </section>
 
     <div class="runway-panel" id="runwayPanel" aria-live="polite">
         <div class="runway-panel__top">
@@ -762,14 +977,80 @@
             });
         }
 
-        const AUTH_USERNAME = 'parsnip';
-        const AUTH_PASSWORD = 'password';
+        const ADMIN_EMAIL = 'lucaparsons958@gmail.com';
         const authOverlay = document.getElementById('authOverlay');
         const appContent = document.getElementById('appContent');
         const loginForm = document.getElementById('loginForm');
         const usernameInput = document.getElementById('usernameInput');
         const passwordInput = document.getElementById('passwordInput');
         const authError = document.getElementById('authError');
+        const requestForm = document.getElementById('requestForm');
+        const requestName = document.getElementById('requestName');
+        const requestEmail = document.getElementById('requestEmail');
+        const requestLocation = document.getElementById('requestLocation');
+        const requestReason = document.getElementById('requestReason');
+        const requestError = document.getElementById('requestError');
+        const adminPanel = document.getElementById('adminPanel');
+        const generatePasswordButton = document.getElementById('generatePasswordButton');
+        const createUserButton = document.getElementById('createUserButton');
+        const newUsername = document.getElementById('newUsername');
+        const newPassword = document.getElementById('newPassword');
+        const adminCreateError = document.getElementById('adminCreateError');
+        const adminCreateSuccess = document.getElementById('adminCreateSuccess');
+        const requestList = document.getElementById('requestList');
+        const loginTab = document.getElementById('loginTab');
+        const requestTab = document.getElementById('requestTab');
+        const loginPanel = document.getElementById('loginPanel');
+        const requestPanel = document.getElementById('requestPanel');
+
+        function getUsers() {
+            try {
+                const stored = localStorage.getItem('users');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+            } catch (error) {
+                console.error('Invalid users storage', error);
+            }
+            const defaultUsers = { parsnip: { password: 'password', role: 'admin' } };
+            localStorage.setItem('users', JSON.stringify(defaultUsers));
+            return defaultUsers;
+        }
+
+        function setUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function getRequests() {
+            try {
+                const stored = localStorage.getItem('accessRequests');
+                return stored ? JSON.parse(stored) : [];
+            } catch (error) {
+                console.error('Invalid requests storage', error);
+                return [];
+            }
+        }
+
+        function setRequests(requests) {
+            localStorage.setItem('accessRequests', JSON.stringify(requests));
+        }
+
+        function getCurrentUser() {
+            return localStorage.getItem('currentUser');
+        }
+
+        function setCurrentUser(username) {
+            localStorage.setItem('currentUser', username);
+        }
+
+        function clearCurrentUser() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('authenticated');
+        }
+
+        function setAuthenticated(value) {
+            localStorage.setItem('authenticated', String(value));
+        }
 
         function showApp() {
             if (appContent) {
@@ -797,25 +1078,82 @@
             }
         }
 
+        function displayRequestError(message) {
+            if (requestError) {
+                requestError.textContent = message;
+            }
+        }
+
+        function displayAdminMessage(message, success = true) {
+            if (adminCreateError && adminCreateSuccess) {
+                adminCreateError.textContent = success ? '' : message;
+                adminCreateSuccess.textContent = success ? message : '';
+            }
+        }
+
+        function renderRequestList() {
+            if (!requestList) {
+                return;
+            }
+            const requests = getRequests();
+            if (!requests.length) {
+                requestList.innerHTML = '<p class="auth-note">No pending access requests.</p>';
+                return;
+            }
+            requestList.innerHTML = requests.map(req => `
+                <div class="admin-request-card">
+                    <strong>${req.name} — ${req.email}</strong>
+                    <p><strong>Location:</strong> ${req.location}</p>
+                    <p><strong>Reason:</strong> ${req.reason}</p>
+                    <p><strong>Requested at:</strong> ${new Date(req.timestamp).toLocaleString()}</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleAdminPanel(show) {
+            if (!adminPanel) return;
+            adminPanel.classList.toggle('hidden', !show);
+        }
+
         function checkAuth() {
             const isAuthenticated = localStorage.getItem('authenticated') === 'true';
-            if (isAuthenticated) {
+            const user = getCurrentUser();
+            if (isAuthenticated && user) {
                 showApp();
+                const users = getUsers();
+                const userEntry = users[user];
+                toggleAdminPanel(userEntry?.role === 'admin');
+                if (userEntry?.role === 'admin') {
+                    renderRequestList();
+                }
                 return true;
             }
             lockApp();
+            toggleAdminPanel(false);
             return false;
         }
 
         function handleLogin(event) {
             event.preventDefault();
-            const username = usernameInput?.value.trim() || '';
+            const username = usernameInput?.value.trim().toLowerCase() || '';
             const password = passwordInput?.value || '';
+            const users = getUsers();
+            const userEntry = users[username];
 
-            if (username.toLowerCase() === AUTH_USERNAME && password === AUTH_PASSWORD) {
-                localStorage.setItem('authenticated', 'true');
+            if (!username || !password) {
+                displayAuthError('Please enter both username and password.');
+                return;
+            }
+
+            if (userEntry?.password === password) {
+                setAuthenticated(true);
+                setCurrentUser(username);
                 displayAuthError('');
                 showApp();
+                toggleAdminPanel(userEntry.role === 'admin');
+                if (userEntry.role === 'admin') {
+                    renderRequestList();
+                }
                 return;
             }
 
@@ -826,8 +1164,91 @@
             }
         }
 
+        function createRandomPassword(length = 14) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+';
+            return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+        }
+
+        function handleGeneratePassword() {
+            if (newPassword) {
+                newPassword.value = createRandomPassword();
+            }
+        }
+
+        function handleCreateUser() {
+            const username = newUsername?.value.trim().toLowerCase() || '';
+            const password = newPassword?.value || '';
+            const users = getUsers();
+
+            if (!username || !password) {
+                displayAdminMessage('Please provide both username and password.', false);
+                return;
+            }
+            if (users[username]) {
+                displayAdminMessage('That username already exists.', false);
+                return;
+            }
+
+            users[username] = { password, role: 'user' };
+            setUsers(users);
+            displayAdminMessage(`Created user ${username} successfully.`);
+            newUsername.value = '';
+        }
+
+        function buildMailtoLink(request) {
+            const subject = encodeURIComponent('Access request for EGCC Pushbacks');
+            const body = encodeURIComponent(
+                `Name: ${request.name}\nEmail: ${request.email}\nLocation: ${request.location}\nReason: ${request.reason}\nRequested at: ${new Date(request.timestamp).toLocaleString()}`
+            );
+            return `mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`;
+        }
+
+        function handleRequestSubmit(event) {
+            event.preventDefault();
+            const name = requestName?.value.trim() || '';
+            const email = requestEmail?.value.trim() || '';
+            const location = requestLocation?.value.trim() || '';
+            const reason = requestReason?.value.trim() || '';
+
+            if (!name || !email || !location || !reason) {
+                displayRequestError('Please fill in all request fields.');
+                return;
+            }
+
+            const request = { name, email, location, reason, timestamp: Date.now() };
+            const requests = getRequests();
+            requests.unshift(request);
+            setRequests(requests);
+            displayRequestError('');
+            if (requestName) requestName.value = '';
+            if (requestEmail) requestEmail.value = '';
+            if (requestLocation) requestLocation.value = '';
+            if (requestReason) requestReason.value = '';
+
+            const mailto = buildMailtoLink(request);
+            window.location.href = mailto;
+            alert('Request saved. Your email client will open to notify the admin.');
+        }
+
+        function switchTab(tab) {
+            if (!loginTab || !requestTab || !loginPanel || !requestPanel) return;
+            const loginActive = tab === 'login';
+            loginTab.classList.toggle('active', loginActive);
+            requestTab.classList.toggle('active', !loginActive);
+            loginTab.setAttribute('aria-selected', String(loginActive));
+            requestTab.setAttribute('aria-selected', String(!loginActive));
+            loginPanel.classList.toggle('hidden', !loginActive);
+            requestPanel.classList.toggle('hidden', loginActive);
+            displayAuthError('');
+            displayRequestError('');
+        }
+
         if (loginForm) {
             loginForm.addEventListener('submit', handleLogin);
+        }
+
+        if (requestForm) {
+            requestForm.addEventListener('submit', handleRequestSubmit);
         }
 
         if (usernameInput) {
@@ -836,6 +1257,22 @@
 
         if (passwordInput) {
             passwordInput.addEventListener('input', () => displayAuthError(''));
+        }
+
+        if (generatePasswordButton) {
+            generatePasswordButton.addEventListener('click', handleGeneratePassword);
+        }
+
+        if (createUserButton) {
+            createUserButton.addEventListener('click', handleCreateUser);
+        }
+
+        if (loginTab) {
+            loginTab.addEventListener('click', () => switchTab('login'));
+        }
+
+        if (requestTab) {
+            requestTab.addEventListener('click', () => switchTab('request'));
         }
 
         function renderCards(data) {
