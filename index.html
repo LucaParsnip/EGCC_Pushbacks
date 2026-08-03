@@ -333,9 +333,165 @@
         footer strong {
             color: var(--text-main);
         }
+    
+        .auth-overlay {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 24%),
+                        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.18), transparent 20%),
+                        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
+            z-index: 1000;
+            padding: 2rem;
+            backdrop-filter: blur(8px);
+        }
+
+        .auth-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease 0.1s;
+        }
+
+        .auth-card {
+            width: min(520px, 100%);
+            border-radius: 30px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            background: rgba(15, 23, 42, 0.94);
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            inset: -40%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 42%);
+            transform: translate(20%, -60%);
+            filter: blur(60px);
+            opacity: 0.75;
+        }
+
+        .auth-card__inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-title {
+            font-size: clamp(2rem, 2.6vw, 2.6rem);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+            color: #dbeafe;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 1.75rem;
+            line-height: 1.7;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .auth-field {
+            display: grid;
+            gap: 0.35rem;
+            color: var(--text-main);
+        }
+
+        .auth-field label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .auth-field input {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(15, 23, 42, 0.85);
+            color: var(--text-main);
+            padding: 0.95rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-field input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 18px rgba(56, 189, 248, 0.18);
+        }
+
+        .auth-note {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .auth-error {
+            color: #fb7185;
+            font-size: 0.95rem;
+            min-height: 1.25rem;
+        }
+
+        .auth-submit {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 999px;
+            padding: 1rem 1.2rem;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 60%, #0284c7 100%);
+            color: #0f172a;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 20px 40px rgba(2, 132, 199, 0.25);
+        }
+
+        .auth-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(2, 132, 199, 0.3);
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        #appContent.locked {
+            filter: blur(2px) brightness(0.85);
+            pointer-events: none;
+            user-select: none;
+        }
     </style>
 </head>
 <body>
+    <div class="auth-overlay" id="authOverlay" aria-modal="true" role="dialog">
+        <div class="auth-card" role="document">
+            <div class="auth-card__inner">
+                <h1 class="auth-title">Secure Access Required</h1>
+                <p class="auth-subtitle">Enter the credentials to unlock the Manchester pushback lookup. Only authorised users may proceed.</p>
+                <form class="auth-form" id="loginForm">
+                    <div class="auth-field">
+                        <label for="usernameInput">Username</label>
+                        <input id="usernameInput" type="text" autocomplete="username" placeholder="Username" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="passwordInput">Password</label>
+                        <input id="passwordInput" type="password" autocomplete="current-password" placeholder="Password" required>
+                    </div>
+                    <div class="auth-error" id="authError" aria-live="polite"></div>
+                    <button class="auth-submit" type="submit">Unlock the tower</button>
+                </form>
+                <p class="auth-note">Hint: username is <strong>parsnip</strong> and password is <strong>password</strong>.</p>
+            </div>
+        </div>
+    </div>
+    <div id="appContent" class="locked">
 
     <header>
         <h1>EGCC - iniBuilds Manchester</h1>
@@ -525,6 +681,82 @@
             });
         }
 
+        const AUTH_USERNAME = 'parsnip';
+        const AUTH_PASSWORD = 'password';
+        const authOverlay = document.getElementById('authOverlay');
+        const appContent = document.getElementById('appContent');
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const authError = document.getElementById('authError');
+
+        function showApp() {
+            if (appContent) {
+                appContent.classList.remove('locked');
+            }
+            if (authOverlay) {
+                authOverlay.classList.add('hidden');
+            }
+            document.body.classList.remove('no-scroll');
+        }
+
+        function lockApp() {
+            if (appContent) {
+                appContent.classList.add('locked');
+            }
+            if (authOverlay) {
+                authOverlay.classList.remove('hidden');
+            }
+            document.body.classList.add('no-scroll');
+        }
+
+        function displayAuthError(message) {
+            if (authError) {
+                authError.textContent = message;
+            }
+        }
+
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem('authenticated') === 'true';
+            if (isAuthenticated) {
+                showApp();
+                return true;
+            }
+            lockApp();
+            return false;
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = usernameInput?.value.trim() || '';
+            const password = passwordInput?.value || '';
+
+            if (username.toLowerCase() === AUTH_USERNAME && password === AUTH_PASSWORD) {
+                localStorage.setItem('authenticated', 'true');
+                displayAuthError('');
+                showApp();
+                return;
+            }
+
+            displayAuthError('Invalid username or password. Please try again.');
+            if (passwordInput) {
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLogin);
+        }
+
+        if (usernameInput) {
+            usernameInput.addEventListener('input', () => displayAuthError(''));
+        }
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', () => displayAuthError(''));
+        }
+
         function renderCards(data) {
             grid.innerHTML = '';
             if (data.length === 0) {
@@ -607,8 +839,10 @@
         searchInput.addEventListener('input', filterData);
 
         // Initial render
+        checkAuth();
         loadStandsData();
         updateRunwayPanel();
     </script>
+    </div>
 </body>
 </html>
