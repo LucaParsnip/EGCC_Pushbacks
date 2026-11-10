@@ -338,12 +338,328 @@
         footer strong {
             color: var(--text-main);
         }
+
+        .airport-menu {
+            --menu-bg: #101714;
+            --menu-surface: #18221e;
+            --menu-line: rgba(215, 230, 216, 0.14);
+            --menu-muted: #9baa9e;
+            --menu-accent: #d3ef74;
+            width: min(100%, 1120px);
+            min-height: calc(100vh - 4rem);
+            margin: auto;
+            padding: clamp(1.2rem, 4vw, 3rem);
+            color: #edf2e8;
+            background-color: var(--menu-bg);
+            background-image: linear-gradient(rgba(215, 230, 216, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(215, 230, 216, 0.035) 1px, transparent 1px);
+            background-size: 44px 44px;
+            border: 1px solid var(--menu-line);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .airport-menu[hidden], #appContent[hidden] {
+            display: none;
+        }
+
+        .airport-menu__top, .airport-menu__footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .airport-menu__brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .airport-menu__brand-mark {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            color: var(--menu-bg);
+            background: var(--menu-accent);
+            border-radius: 7px;
+            font-size: 0.7rem;
+            letter-spacing: 0;
+        }
+
+        .airport-menu__edition, .airport-menu__footer {
+            color: var(--menu-muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .airport-menu__intro {
+            margin: clamp(3rem, 9vh, 6rem) 0 2rem;
+            max-width: 650px;
+        }
+
+        .airport-menu__eyebrow {
+            margin-bottom: 0.8rem;
+            color: var(--menu-accent);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.19em;
+            text-transform: uppercase;
+        }
+
+        .airport-menu__intro h1 {
+            margin-bottom: 0.8rem;
+            font-family: 'Bahnschrift', 'DIN Alternate', 'Segoe UI', sans-serif;
+            font-size: clamp(2.6rem, 6vw, 4.8rem);
+            font-weight: 600;
+            line-height: 0.98;
+        }
+
+        .airport-menu__intro p:last-child {
+            max-width: 460px;
+            color: var(--menu-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .airport-menu__grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .airport-card {
+            min-height: 290px;
+            padding: 1.25rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            overflow: hidden;
+            text-align: left;
+            color: #edf2e8;
+            background: var(--menu-surface);
+            border: 1px solid var(--menu-line);
+            border-radius: 10px;
+            font: inherit;
+        }
+
+        button.airport-card {
+            cursor: pointer;
+            transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+        }
+
+        button.airport-card:hover, button.airport-card:focus-visible {
+            transform: translateY(-4px);
+            border-color: var(--menu-accent);
+            background-color: #202c25;
+            outline: none;
+        }
+
+        .airport-card__status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: var(--menu-muted);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .airport-card__status::before {
+            width: 7px;
+            height: 7px;
+            content: '';
+            background: #738178;
+            border-radius: 50%;
+        }
+
+        .airport-card--available .airport-card__status {
+            color: var(--menu-accent);
+        }
+
+        .airport-card--available .airport-card__status::before {
+            background: var(--menu-accent);
+            box-shadow: 0 0 12px rgba(211, 239, 116, 0.7);
+        }
+
+        .airport-card__code {
+            margin-top: 2rem;
+            font-family: 'Bahnschrift', 'DIN Alternate', 'Segoe UI', sans-serif;
+            font-size: clamp(2.3rem, 4vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            line-height: 1;
+        }
+
+        .airport-card__name {
+            margin-top: 0.45rem;
+            color: #b7c3b9;
+            font-size: 1rem;
+        }
+
+        .airport-card__runway {
+            height: 36px;
+            width: 62%;
+            position: absolute;
+            right: -2rem;
+            bottom: 4.5rem;
+            transform: rotate(-35deg);
+            border: 1px solid rgba(237, 242, 232, 0.2);
+            background: repeating-linear-gradient(90deg, transparent 0 15px, rgba(237, 242, 232, 0.12) 15px 16px);
+        }
+
+        .airport-card__runway::after {
+            width: 70%;
+            height: 1px;
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            content: '';
+            background: repeating-linear-gradient(90deg, rgba(211, 239, 116, 0.85) 0 10px, transparent 10px 18px);
+        }
+
+        .airport-card__action {
+            margin-top: auto;
+            padding-top: 2.4rem;
+            color: var(--menu-accent);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .airport-card:disabled {
+            color: #86928a;
+            cursor: not-allowed;
+        }
+
+        .airport-card:disabled .airport-card__runway {
+            opacity: 0.45;
+        }
+
+        .airport-card:disabled .airport-card__action {
+            color: #a7b0aa;
+        }
+
+        .airport-menu__footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--menu-line);
+        }
+
+        .airport-back {
+            margin-bottom: 1rem;
+            padding: 0.45rem 0.75rem;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 7px;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.82rem;
+        }
+
+        .airport-back:hover, .airport-back:focus-visible {
+            color: var(--text-main);
+            border-color: var(--accent-color);
+        }
+
+        @media (max-width: 760px) {
+            .airport-menu {
+                min-height: calc(100vh - 2rem);
+                padding: 1.25rem;
+                border-radius: 12px;
+            }
+
+            .airport-menu__intro {
+                margin: 3rem 0 1.5rem;
+            }
+
+            .airport-menu__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .airport-card {
+                min-height: 205px;
+            }
+
+            .airport-card__code {
+                margin-top: 1.4rem;
+            }
+
+            .airport-card__action {
+                padding-top: 1.5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <div id="appContent">
+    <main class="airport-menu" id="airportMenu" aria-labelledby="airportMenuTitle">
+        <div class="airport-menu__top">
+            <div class="airport-menu__brand">
+                <span class="airport-menu__brand-mark" aria-hidden="true">AP</span>
+                <span>Airport Operations</span>
+            </div>
+            <span class="airport-menu__edition">Flight sim reference / UK</span>
+        </div>
+
+        <section class="airport-menu__intro">
+            <p class="airport-menu__eyebrow">Stand &amp; pushback directory</p>
+            <h1 id="airportMenuTitle">Choose your airport</h1>
+            <p>Select an airport to open its stand and pushback reference.</p>
+        </section>
+
+        <div class="airport-menu__grid" aria-label="Available and upcoming airports">
+            <button class="airport-card airport-card--available" id="openEGCC" type="button">
+                <span class="airport-card__status">Available now</span>
+                <span class="airport-card__code">EGCC</span>
+                <span class="airport-card__name">Manchester</span>
+                <span class="airport-card__runway" aria-hidden="true"></span>
+                <span class="airport-card__action">Open airport <span aria-hidden="true">&#8594;</span></span>
+            </button>
+            <button class="airport-card" type="button" disabled aria-label="EGKK Gatwick, coming soon">
+                <span class="airport-card__status">Coming soon</span>
+                <span class="airport-card__code">EGKK</span>
+                <span class="airport-card__name">Gatwick</span>
+                <span class="airport-card__runway" aria-hidden="true"></span>
+                <span class="airport-card__action">Reference in development</span>
+            </button>
+            <button class="airport-card" type="button" disabled aria-label="EGGW Luton, coming soon">
+                <span class="airport-card__status">Coming soon</span>
+                <span class="airport-card__code">EGGW</span>
+                <span class="airport-card__name">London Luton</span>
+                <span class="airport-card__runway" aria-hidden="true"></span>
+                <span class="airport-card__action">Reference in development</span>
+            </button>
+        </div>
+
+        <div class="airport-menu__footer">
+            <span>UK airport directory</span>
+            <span>01 airport available</span>
+        </div>
+    </main>
+
+    <div id="appContent" hidden>
 
     <header>
+        <button class="airport-back" id="backToAirports" type="button">&#8592; Airports</button>
         <h1>EGCC - iniBuilds Manchester</h1>
         <p>Stand & Pushback Position Lookup</p>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark and light mode" aria-pressed="true">
@@ -584,6 +900,26 @@
         const searchInput = document.getElementById('searchInput');
         const quickSelect = document.getElementById('quickSelect');
         const themeToggle = document.getElementById('themeToggle');
+        const airportMenu = document.getElementById('airportMenu');
+        const appContent = document.getElementById('appContent');
+        const openEGCC = document.getElementById('openEGCC');
+        const backToAirports = document.getElementById('backToAirports');
+        let runwayUpdateTimer;
+
+        function showAirportMenu() {
+            airportMenu.hidden = false;
+            appContent.hidden = true;
+        }
+
+        function openAirport() {
+            airportMenu.hidden = true;
+            appContent.hidden = false;
+            loadStandsData();
+            updateRunwayPanel();
+            if (!runwayUpdateTimer) {
+                runwayUpdateTimer = setInterval(updateRunwayPanel, 15000);
+            }
+        }
 
         function applyTheme(theme) {
             document.body.setAttribute('data-theme', theme);
@@ -690,10 +1026,8 @@
 
         searchInput.addEventListener('input', filterData);
 
-        // Initial render
-        loadStandsData();
-        updateRunwayPanel();
-        setInterval(updateRunwayPanel, 15000);
+        openEGCC.addEventListener('click', openAirport);
+        backToAirports.addEventListener('click', showAirportMenu);
     </script>
     </div>
 </body>
