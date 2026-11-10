@@ -634,12 +634,12 @@
                 <span class="airport-card__runway" aria-hidden="true"></span>
                 <span class="airport-card__action">Open airport <span aria-hidden="true">&#8594;</span></span>
             </button>
-            <button class="airport-card" type="button" disabled aria-label="EGKK Gatwick, coming soon">
-                <span class="airport-card__status">Coming soon</span>
+            <button class="airport-card airport-card--available" id="openEGKK" type="button">
+                <span class="airport-card__status">Available now</span>
                 <span class="airport-card__code">EGKK</span>
                 <span class="airport-card__name">Gatwick</span>
                 <span class="airport-card__runway" aria-hidden="true"></span>
-                <span class="airport-card__action">Reference in development</span>
+                <span class="airport-card__action">Open airport <span aria-hidden="true">&#8594;</span></span>
             </button>
             <button class="airport-card airport-card--available" id="openEGGW" type="button">
                 <span class="airport-card__status">Available now</span>
@@ -652,7 +652,7 @@
 
         <div class="airport-menu__footer">
             <span>UK airport directory</span>
-            <span>02 airports available</span>
+            <span>03 airports available</span>
         </div>
     </main>
 
@@ -887,6 +887,7 @@
         const appContent = document.getElementById('appContent');
         const openEGCC = document.getElementById('openEGCC');
         const openEGGW = document.getElementById('openEGGW');
+        const openEGKK = document.getElementById('openEGKK');
         const backToAirports = document.getElementById('backToAirports');
         const airportTitle = document.getElementById('airportTitle');
         const runwayPanel = document.getElementById('runwayPanel');
@@ -911,6 +912,14 @@
                 featuredStands: ['1', '12', '20', '31', '49', '60', '80', '90'],
                 credit: 'EGGW Pushback Data mapped from GSX Profile v1.1 by <strong>RW Profiles</strong> (reverentan).',
                 disclaimer: 'Designed for iniBuilds London Luton Airport (EGGW) • For simulation use only.'
+            },
+            EGKK: {
+                title: 'EGKK - iniBuilds London Gatwick',
+                dataFiles: ['stands-egkk-1.json', 'stands-egkk-2.json', 'stands-egkk-3.json', 'stands-egkk-4.json'],
+                runwayInfo: false,
+                featuredStands: ['gate 1', 'gate 2', 'gate 34', 'gate 554', 'gate 690', 'parking 130', 'parking 170', 'parking 230', 'parking 558', 'parking 68'],
+                credit: 'EGKK Pushback Data mapped from GSX Profile v1.8 by <strong>RW Profiles</strong> (MichaelWimma, edited by reverentan).',
+                disclaimer: 'Designed for iniBuilds London Gatwick Airport (EGKK) • For simulation use only.'
             }
         };
 
@@ -940,13 +949,17 @@
 
         async function loadStandsData(airport, airportCode) {
             try {
-                const response = await fetch(airport.dataFile);
-                if (!response.ok) {
-                    throw new Error(`Failed to load stand data: ${response.status}`);
-                }
+                const dataFiles = airport.dataFiles || [airport.dataFile];
+                const dataSets = await Promise.all(dataFiles.map(async dataFile => {
+                    const response = await fetch(dataFile);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load stand data: ${response.status}`);
+                    }
+                    return response.json();
+                }));
 
-                const data = await response.json();
-                standsData = airportCode === 'EGGW' ? expandAirportGroups(data) : data;
+                const data = dataSets.flat();
+                standsData = airportCode === 'EGGW' || airportCode === 'EGKK' ? expandAirportGroups(data) : data;
                 renderCards(standsData);
                 createQuickSelects(airport.featuredStands);
             } catch (error) {
@@ -957,7 +970,7 @@
 
         function expandAirportGroups(groups) {
             return groups.flatMap(group => group.stands.map(stand => ({
-                stand,
+                stand: stand.replace(/\b(gate|parking)\b/gi, word => word[0].toUpperCase() + word.slice(1)),
                 type: group.type,
                 options: group.options.map(option => ({ ...option }))
             })));
@@ -968,7 +981,7 @@
             featuredStands.forEach(num => {
                 const btn = document.createElement('button');
                 btn.className = 'quick-btn';
-                btn.textContent = `Stand ${num}`;
+                btn.textContent = /^(gate|parking)\s/i.test(num) ? num : `Stand ${num}`;
                 btn.onclick = () => {
                     searchInput.value = num;
                     filterData();
@@ -984,6 +997,7 @@
         function registerAirportNavigation() {
             openEGCC.addEventListener('click', () => openAirport('EGCC'));
             openEGGW.addEventListener('click', () => openAirport('EGGW'));
+            openEGKK.addEventListener('click', () => openAirport('EGKK'));
             backToAirports.addEventListener('click', showAirportMenu);
         }
 
@@ -1046,6 +1060,7 @@
 
         function filterData() {
             const rawQuery = searchInput.value.trim();
+            const hasTypePrefix = /^(gate|parking|none)\s+/i.test(rawQuery);
             const query = rawQuery.toLowerCase().replace(/^(gate|parking|none)\s+/i, '');
             
             if (!query) {
@@ -1060,6 +1075,10 @@
                 const standCode = item.stand.replace(/^(gate|parking|none)\s+/i, '').toLowerCase();
                 const standSuffix = standCode.match(/[lr]$/i)?.[0]?.toLowerCase() || '';
                 const isFullTitleMatch = item.stand.toLowerCase() === rawQuery.toLowerCase();
+
+                if (hasTypePrefix) {
+                    return isFullTitleMatch;
+                }
 
                 if (isFullTitleMatch) {
                     return true;
