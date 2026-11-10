@@ -641,18 +641,18 @@
                 <span class="airport-card__runway" aria-hidden="true"></span>
                 <span class="airport-card__action">Reference in development</span>
             </button>
-            <button class="airport-card" type="button" disabled aria-label="EGGW Luton, coming soon">
-                <span class="airport-card__status">Coming soon</span>
+            <button class="airport-card airport-card--available" id="openEGGW" type="button">
+                <span class="airport-card__status">Available now</span>
                 <span class="airport-card__code">EGGW</span>
                 <span class="airport-card__name">London Luton</span>
                 <span class="airport-card__runway" aria-hidden="true"></span>
-                <span class="airport-card__action">Reference in development</span>
+                <span class="airport-card__action">Open airport <span aria-hidden="true">&#8594;</span></span>
             </button>
         </div>
 
         <div class="airport-menu__footer">
             <span>UK airport directory</span>
-            <span>01 airport available</span>
+            <span>02 airports available</span>
         </div>
     </main>
 
@@ -660,7 +660,7 @@
 
     <header>
         <button class="airport-back" id="backToAirports" type="button">&#8592; Airports</button>
-        <h1>EGCC - iniBuilds Manchester</h1>
+        <h1 id="airportTitle">EGCC - iniBuilds Manchester</h1>
         <p>Stand & Pushback Position Lookup</p>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark and light mode" aria-pressed="true">
             <span class="theme-toggle__icon">🌙</span>
@@ -696,14 +696,13 @@
     <div class="search-container">
         <input type="text" id="searchInput" class="search-input" placeholder="Enter Stand Number (e.g., 101, 105, 12R, 203L)...">
     </div>
-
     <div class="quick-select" id="quickSelect"></div>
 
     <div class="grid" id="standsGrid"></div>
 
     <footer>
-        <p>EGCC Pushback Data mapped from GSX Profile v1.5 by <strong>RW Profiles</strong> (reverentan, MichaelWimma & Elton Hjalmarsson).</p>
-        <p>Designed for iniBuilds Manchester Airport (EGCC) • For simulation use only.</p>
+        <p id="dataCredit">EGCC Pushback Data mapped from GSX Profile v1.5 by <strong>RW Profiles</strong> (reverentan, MichaelWimma & Elton Hjalmarsson).</p>
+        <p id="airportDisclaimer">Designed for iniBuilds Manchester Airport (EGCC) • For simulation use only.</p>
     </footer>
 
     <script>
@@ -845,7 +844,7 @@
             const windEl = document.getElementById('runwayWind');
             const countdownEl = document.getElementById('runwayCountdown');
 
-            if (!statusEl || !modeEl || !directionEl || !windEl || !countdownEl) {
+            if (activeAirport !== 'EGCC' || !statusEl || !modeEl || !directionEl || !windEl || !countdownEl) {
                 return;
             }
 
@@ -880,22 +879,6 @@
             }
         }
 
-        async function loadStandsData() {
-            try {
-                const response = await fetch('stands.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to load stand data: ${response.status}`);
-                }
-
-                standsData = await response.json();
-                renderCards(standsData);
-                createQuickSelects();
-            } catch (error) {
-                console.error('Unable to load stand data:', error);
-                grid.innerHTML = '<div class="no-results">Unable to load stand data.</div>';
-            }
-        }
-
         const grid = document.getElementById('standsGrid');
         const searchInput = document.getElementById('searchInput');
         const quickSelect = document.getElementById('quickSelect');
@@ -903,24 +886,109 @@
         const airportMenu = document.getElementById('airportMenu');
         const appContent = document.getElementById('appContent');
         const openEGCC = document.getElementById('openEGCC');
+        const openEGGW = document.getElementById('openEGGW');
         const backToAirports = document.getElementById('backToAirports');
+        const airportTitle = document.getElementById('airportTitle');
+        const runwayPanel = document.getElementById('runwayPanel');
+        const dataCredit = document.getElementById('dataCredit');
+        const airportDisclaimer = document.getElementById('airportDisclaimer');
         let runwayUpdateTimer;
+        let activeAirport = 'EGCC';
+
+        const airports = {
+            EGCC: {
+                title: 'EGCC - iniBuilds Manchester',
+                dataFile: 'stands.json',
+                runwayInfo: true,
+                featuredStands: ['101', '105', '110', '12', '203', '208', '302', '41', '54', '61', '80', '901'],
+                credit: 'EGCC Pushback Data mapped from GSX Profile v1.5 by <strong>RW Profiles</strong> (reverentan, MichaelWimma &amp; Elton Hjalmarsson).',
+                disclaimer: 'Designed for iniBuilds Manchester Airport (EGCC) • For simulation use only.'
+            },
+            EGGW: {
+                title: 'EGGW - iniBuilds London Luton',
+                dataFile: 'stands-eggw.json',
+                runwayInfo: false,
+                featuredStands: ['1', '12', '20', '31', '49', '60', '80', '90'],
+                credit: 'EGGW Pushback Data mapped from GSX Profile v1.1 by <strong>RW Profiles</strong> (reverentan).',
+                disclaimer: 'Designed for iniBuilds London Luton Airport (EGGW) • For simulation use only.'
+            }
+        };
 
         function showAirportMenu() {
             airportMenu.hidden = false;
             appContent.hidden = true;
         }
 
-        function openAirport() {
+        function openAirport(airportCode) {
+            activeAirport = airportCode;
+            const airport = airports[airportCode];
+            airportTitle.textContent = airport.title;
+            dataCredit.innerHTML = airport.credit;
+            airportDisclaimer.textContent = airport.disclaimer;
+            runwayPanel.hidden = !airport.runwayInfo;
             airportMenu.hidden = true;
             appContent.hidden = false;
-            loadStandsData();
-            updateRunwayPanel();
-            if (!runwayUpdateTimer) {
-                runwayUpdateTimer = setInterval(updateRunwayPanel, 15000);
+            searchInput.value = '';
+            loadStandsData(airport, airportCode);
+            if (airport.runwayInfo) {
+                updateRunwayPanel();
+                if (!runwayUpdateTimer) {
+                    runwayUpdateTimer = setInterval(updateRunwayPanel, 15000);
+                }
             }
         }
 
+        async function loadStandsData(airport, airportCode) {
+            try {
+                const response = await fetch(airport.dataFile);
+                if (!response.ok) {
+                    throw new Error(`Failed to load stand data: ${response.status}`);
+                }
+
+                const data = await response.json();
+                standsData = airportCode === 'EGGW' ? expandAirportGroups(data) : data;
+                renderCards(standsData);
+                createQuickSelects(airport.featuredStands);
+            } catch (error) {
+                console.error('Unable to load stand data:', error);
+                grid.innerHTML = '<div class="no-results">Unable to load stand data.</div>';
+            }
+        }
+
+        function expandAirportGroups(groups) {
+            return groups.flatMap(group => group.stands.map(stand => ({
+                stand,
+                type: group.type,
+                options: group.options.map(option => ({ ...option }))
+            })));
+        }
+
+        function createQuickSelects(featuredStands) {
+            quickSelect.innerHTML = '';
+            featuredStands.forEach(num => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-btn';
+                btn.textContent = `Stand ${num}`;
+                btn.onclick = () => {
+                    searchInput.value = num;
+                    filterData();
+                };
+                quickSelect.appendChild(btn);
+            });
+        }
+
+        function applyAirportRunwayVisibility() {
+            runwayPanel.hidden = activeAirport !== 'EGCC';
+        }
+
+        function registerAirportNavigation() {
+            openEGCC.addEventListener('click', () => openAirport('EGCC'));
+            openEGGW.addEventListener('click', () => openAirport('EGGW'));
+            backToAirports.addEventListener('click', showAirportMenu);
+        }
+
+        registerAirportNavigation();
+        applyAirportRunwayVisibility();
         function applyTheme(theme) {
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -976,21 +1044,6 @@
             });
         }
 
-        function createQuickSelects() {
-            quickSelect.innerHTML = '';
-            const featuredStands = ["101", "105", "110", "12", "203", "208", "302", "41", "54", "61", "80", "901"];
-            featuredStands.forEach(num => {
-                const btn = document.createElement('button');
-                btn.className = 'quick-btn';
-                btn.textContent = `Stand ${num}`;
-                btn.onclick = () => {
-                    searchInput.value = num;
-                    filterData();
-                };
-                quickSelect.appendChild(btn);
-            });
-        }
-
         function filterData() {
             const rawQuery = searchInput.value.trim();
             const query = rawQuery.toLowerCase().replace(/^(gate|parking|none)\s+/i, '');
@@ -1026,8 +1079,6 @@
 
         searchInput.addEventListener('input', filterData);
 
-        openEGCC.addEventListener('click', openAirport);
-        backToAirports.addEventListener('click', showAirportMenu);
     </script>
     </div>
 </body>

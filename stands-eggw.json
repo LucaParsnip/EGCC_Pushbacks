@@ -1,0 +1,151 @@
+[
+  {
+    "type": "Parking",
+    "stands": ["Parking 1", "Parking 1r", "Parking 2", "Parking 3", "Parking 4", "Parking 5", "Parking 6", "Parking 7", "Parking 8", "Parking 9", "Parking 9l"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing South towards B7" },
+      { "label": "Option 2", "val": "Nose Left - Facing North towards E1" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 20", "Parking 21", "Parking 21l", "Parking 21r", "Parking 22", "Parking 23", "Parking 23l", "Parking 23r"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing East toward A5" },
+      { "label": "Option 2", "val": "Nose Left - Facing West toward A6" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 10", "Parking 10r", "Parking 11", "Parking 11r", "Parking 11l", "Parking 12", "Parking 12r", "Parking 13", "Parking 13r", "Parking 13l", "Parking 14", "Parking 14l", "Parking 15", "Parking 15l", "Parking 16", "Parking 17", "Parking 18", "Parking 19"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing North towards E1" },
+      { "label": "Option 2", "val": "Nose Left - Facing South towards B7" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 43", "Parking 43l", "Parking 44", "Parking 44l", "Parking 44r", "Parking 45", "Parking 45r", "Parking 46", "Parking 47", "Parking 48", "Parking 49"],
+    "options": [
+      { "label": "Option 1", "val": "Tug Release Point X - Facing East" },
+      { "label": "Option 2", "val": "Tug Release Point V - Facing East" },
+      { "label": "Custom Position 1", "val": "Tug Release Point Y - Facing South", "custom": true },
+      { "label": "Custom Position 2", "val": "Tug Release Point Z - Facing North", "custom": true }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 30", "Parking 31"],
+    "options": [
+      { "label": "Option 1", "val": "Onto Taxiway E - Facing East at E3" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 62"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing West towards J1" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 71"],
+    "options": [
+      { "label": "Option 1", "val": "Onto Taxiway E - Facing East at E3" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 29"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing SE on Apron" },
+      { "label": "Option 2", "val": "Onto Taxiway E - Facing East towards E3" },
+      { "label": "Custom Position", "val": "Onto Taxiway E - Facing West towards E2", "custom": true }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 32", "Parking 80"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing East towards E2" },
+      { "label": "Option 2", "val": "Nose Left - Facing West towards E2" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 200"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right/Tail Left (LEFT)" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 81"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing North towards E1" },
+      { "label": "Option 2", "val": "Nose Left - Facing South towards B7" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 58", "Parking 56"],
+    "options": [
+      { "label": "Option 1", "val": "Onto Taxiway B - Facing South towards B7" },
+      { "label": "Option 2", "val": "Onto Taxiway B - Facing North towards E1" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 54"],
+    "options": [
+      { "label": "Option 1", "val": "Straight Back - Facing South on Apron" },
+      { "label": "Option 2", "val": "Onto Taxiway B - Facing South towards B7" },
+      { "label": "Custom Position", "val": "Onto Taxiway B - Facing North towards E1", "custom": true }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["Gate 60"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing West towards Main Apron" },
+      { "label": "Option 2", "val": "Nose Left - Facing East towards E1" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["Gate 61"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing West towards E2" },
+      { "label": "Option 2", "val": "Nose Left - Facing East towards E3" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 72", "Parking 74", "Parking 75", "Parking 76"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing West towards E2" },
+      { "label": "Option 2", "val": "Nose Left - Facing East towards E3" },
+      { "label": "Custom Position", "val": "Alternative - Facing South towards D4", "custom": true }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 77", "Parking 78", "Parking 79"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing East towards E3" },
+      { "label": "Option 2", "val": "Nose Left - Facing West towards E2" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["Parking 90", "Parking 91", "Parking 92", "Parking 93"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing North towards D2" },
+      { "label": "Option 2", "val": "Nose Left - Facing South towards D1" }
+    ]
+  }
+]
