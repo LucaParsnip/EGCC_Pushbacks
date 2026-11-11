@@ -1,0 +1,158 @@
+[
+  {
+    "type": "Gate",
+    "stands": ["gate 10", "gate 11"],
+    "options": [
+      { "label": "Option 1", "val": "Push to Park - Stand 24" },
+      { "label": "Option 2", "val": "Push to Park - Stand 23" },
+      { "label": "Option 3", "val": "Nose Right - Facing South to A5" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 12"],
+    "options": [
+      { "label": "Option 1", "val": "Push to Park - Stand 25" },
+      { "label": "Option 2", "val": "Push to Park - Stand 24" },
+      { "label": "Option 3", "val": "Push to Park - Stand 23" },
+      { "label": "Option 4", "val": "Nose Left - Facing East (Max Span 35m)" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 3", "gate 4"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing West to B2" },
+      { "label": "Option 2", "val": "Push to Park - Stand 25" },
+      { "label": "Option 3", "val": "Push to Park - Stand 25L" },
+      { "label": "Option 4", "val": "Push to Park - Stand 25R" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 5"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing North to A3" },
+      { "label": "Option 2", "val": "Push to Park - Stand 25" },
+      { "label": "Option 3", "val": "Push to Park - Stand 25L" },
+      { "label": "Option 4", "val": "Push to Park - Stand 25R" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 7"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing West to B2" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 2", "gate 8"],
+    "options": [
+      { "label": "Option 1", "val": "Push to Park - Stand 25" },
+      { "label": "Option 2", "val": "Push to Park - Stand 25L" },
+      { "label": "Option 3", "val": "Push to Park - Stand 25R" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 9"],
+    "options": [
+      { "label": "Option 1", "val": "Straight Push - Facing South to A5" },
+      { "label": "Option 2", "val": "Push to Park - Stand 25" },
+      { "label": "Option 3", "val": "Push to Park - Stand 24" },
+      { "label": "Option 4", "val": "Push to Park - Stand 23" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 30"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing East" },
+      { "label": "Option 2", "val": "Nose Left - Facing South to A5 - Heavy ACFT Standard" },
+      { "label": "Option 3", "val": "Push to Park - Stand 25" },
+      { "label": "Option 4", "val": "Push to Park - Stand 24" },
+      { "label": "Option 5", "val": "Push to Park - Stand 23" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 1"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing North" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Gate",
+    "stands": ["gate 6"],
+    "options": [
+      { "label": "Option 1", "val": "Straight Push - Facing North to A3" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["parking 13", "parking 14", "parking 15"],
+    "options": [
+      { "label": "Option 1", "val": "Push to Park - Stand 24" },
+      { "label": "Option 2", "val": "Nose Right - Facing South to A5" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["parking 16"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing West to D8" },
+      { "label": "Option 2", "val": "Nose Right - Facing North" },
+      { "label": "Option 3", "val": "Push to Park - Stand 25" },
+      { "label": "Option 4", "val": "Push to Park - Stand 24" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["parking 17", "parking 18", "parking 19", "parking 20", "parking 21", "parking 22"],
+    "options": [
+      { "label": "Option 1", "val": "Push to Park - Stand 24" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["parking 23", "parking 24", "parking 25", "parking 25l", "parking 25r"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing South" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "Parking",
+    "stands": ["parking 60", "parking 61", "parking 62"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing North" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "None",
+    "stands": ["none 51", "none 52"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Left - Facing South" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "None",
+    "stands": ["none 53"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right - Facing South" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  },
+  {
+    "type": "None",
+    "stands": ["none 54", "none 55", "none 56", "none 57", "none 58"],
+    "options": [
+      { "label": "Option 1", "val": "Nose Right/Tail Left (LEFT)" },
+      { "label": "Option 2", "val": "Nose Left/Tail Right (RIGHT)" }
+    ]
+  }
+]
